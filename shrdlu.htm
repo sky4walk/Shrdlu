@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0062)http://www.cs.cf.ac.uk/User/Dave.Marshall/AI1/COPY/shrdlu.html -->
+<HTML><HEAD>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<META content="MSHTML 5.00.3103.1000" name=GENERATOR></HEAD>
+<BODY>
+<H2>WINOGRAD'S SHRDLU</H2>
+<P>Reference Cognitive Psychology 3 No 1 1972 Academic Press 1972
+<P>Winograd's program for understanding natural language.
+<P>INTRODUCTION
+<P>
+<P>It is not a simulation but it uses important ideas about human syntactic 
+semantic and problem solving activities and about their interactions in 
+understanding natural language discourse.
+<P>The system answers questions executes commands and accepts information in an 
+interactive English dialogue. Understanding of English requires an integrated 
+study of syntax semantics and inference. Winograd felt that the best way to 
+experiment with complex models of language was to write a program which can 
+actually understand language within some domain. In this case with a robot which 
+has a hand and eye and the ability to manipulate toy blocks. 
+<P>
+<P>The program attempts 
+<P>1 to be a useable language understanding system
+<P>2 to gain a better understanding of what language is and how to put it 
+together
+<P>3 to understand what intelligence is and how it can be put into computers.
+<P>
+<P>A comparatively recent commendation of SHRDLU.
+<P>
+<P>SHRDLU is head and shoulders above contempoary systems when it comes to 
+intelligent conversation. Although its domain of discourse is restricted to a 
+tabletop world of coloured objects SHRDLU really understands this world in terms 
+of the relation between semantics and the physical properties of the blocks and 
+the tabletop. It consists of subsystems that parse interpret and construct 
+sentences carry out dictionary searches and semantic analyses and makes logical 
+deductions. Conversational systems such as SHRDLU undoubtedly herald the future 
+the advantages of a computer that is able to discuss problems intelligently with 
+humans rather than passively accepting programs to solve the problems are too 
+obvious to miss. Computer scientists in artificial intelligence work in part to 
+this goal. 
+<P>
+<P>The system uses Halliday's systemic grammar which emphasises the limited and 
+highly structured choices made in producing syntactic structure abstracting the 
+features that are important for conveying meaning. The parser is special and 
+interprets the recognition grammars. Meaning is covered by the development of a 
+formalism for concepts within a language user's model of the world representing 
+objects events and relationships. Semantics is represented by a system which is 
+developed to work in conjunction with the parser a dictionary and the problem 
+solving programs. It considers not only meaning but context.
+<P>
+<P>1 MONITOR is a small LISP program which calls the other parts of the system.
+<P>2 INPUT is a LISP program which accepts typed English input looks up words in 
+the dictionary performs morphemic analysisand returns a string of words with 
+their definitions. This is the string upon which the grammar works.
+<P>3 The GRAMMAR is the main coordinator of the understanding process it is 
+written in PROGRAMMAR. The routines are then translated into LISP.
+<P>4. SEMANTICS is a collection of LISP programs which work witrh GRAMMAR to 
+interpret sentences. Each basic unit of grammar has many programs asociated with 
+it.
+<P>5 ANSWER is a collection of LISP programs that control the responses of the 
+system and it also remembers conversation for future discussion. It uses 
+heuristics to produce the best English in its answers.
+<P>6 PROGRAMMAR is a parsing system which interprets the grammars written in 
+terms of programs. It is written in LISP and builds a parse tree and has 
+mechanisms for manipulating and exploring the tree.
+<P>7 The dictionary consists of two parts the first part holds the syntactic 
+features of each word. The semantic features of each word are held in the second 
+part and are interpreted by the SEMANTICS program. There are facilities for 
+irregular forms and the definitions are held in a property list.
+<P>8 SEMANTIC features are also held in a property list and used in semantic 
+analysis.
+<P>9 BLOCKS is a collection of PLANNER theorems which handle the dynamics of the 
+building blocks on the tabletop.
+<P>10 MOVER is a set of display routines which simulate robot's world on the 
+DEC340 graphic display attached to the PDP-10
+<P>11 PLANNER is the deductive system used to direct the parsing process and to 
+deduce facts in the BLOCKS world. <B>STRUCTURE OF THE SYSTEM
+<P><A href="http://www.cm.cf.ac.uk/Dave/AI1/ailect15shrdlu1.gif">Click here for 
+Picture </A></B>
+<P>
+<P>SAMPLE DIALOGUE
+<P>start at figure 3
+<P>1 pick up a red block
+<P>OK
+<P>in order to pick up the red block it had to find a space to place the gren 
+one on top.
+<P>2 grasp the pyramid
+<P>I DON'T UNDERSTAND WHICH PYRAMID YOU MEAN
+<P>there are three pyramids so nothing is done
+<P>3 find a block which is taller than the one you are holding and put it in the 
+box
+<P>BY "IT" I ASSUME YOU MEAN THE BLOCK WHICH IS TALLER THAN THE ONE I AM HOLDING 
+OK
+<P>the system interprets one and it and puts down the red block and picks up the 
+taller blue block reach figure 4
+<P>4 what does the box contain?
+<P>THE BLUE PYRAMID AND THE BLUE BLOCK
+<P>5 what is the pyramid supported by?
+<P>THE BOX
+<P>earlier the system did not know which pyramid now it assumes the one in the 
+box
+<P>6 how many blocks are not in the box?
+<P>FOUR OF THEM
+<P>7 is at least one of them narrower than the one which I told you to pick up?
+<P>YES THE RED CUBE
+<P>the phrases "at least one of " and " the one which " refer back to previous 
+questions and the form of noun groups ie the syntactic structure helps here.
+<P>8 is it supported?
+<P>YES BY THE TABLE
+<P>passive
+<P>9 can the table pick up blocks?
+<P>NO
+<P>the semantic rules make this silly thus false
+<P>10 can a pyramid be supported by a block?
+<P>YES
+<P>the deductive system can find an example of this occurring
+<P>11 can a pyramid support a pyramid?
+<P>I DON'T KNOW
+<P>the deductive system cannot find an example
+<P>12 stack up two pyramids
+<P>I CAN'T
+<P>the system tries and fails
+<P>13 the blue pyramid is mine
+<P>I UNDERSTAND
+<P>14 I own blocks which are not red but I don't own anything which supports a 
+pyramid
+<P>I UNDERSTAND
+<P>15 do I own the box?
+<P>NO
+<P>the box supports a pyramid
+<P>16 do I own anything in the box?
+<P>YES TWO THINGS THE BLUE PYRAMID AND THE BLUE BLOCK
+<P>17 will you please stack up both of the red blocks and either a green cube or 
+a pyramid?
+<P>OK
+<P>it places the green block on the big red block removes the green pyramid and 
+then puts the red block on the top see figure 5
+<P>18 which cube is sitting on the table?
+<P>THE LARGE GREEN ONE WHICH SUPPORTS THE RED PYRAMID
+<P>this helps to distinguish the correct cube
+<P>19 is there a large block behind a pyramid?
+<P>YES THREE OF THEM A LARGE RED ONE A LARGE GREEN CUBE AND THE BLUE ONE
+<P>20 put a small one onto the green cube which supports a pyramid
+<P>OK
+<P>a small one means a small block
+<P>21 put the littlest pyramid on top of it
+<P>OK
+<P>littlest must be interpreted from its root
+<P>22 how many things are on top of green cubes
+<P>I'M NOT SURE WHAT YOU MEAN BY " ON TOP OF" IN THE PHRASE 
+<P>" ON TOP OF GREEN CUBES"
+<P>DO YOU MEAN
+<P>1 DIRECTLY ON THE SURFACE
+<P>2 ANYWHERE ON TOP OF?
+<P>2
+<P>THREE OF THEM
+<P>where there is ambiguity questions involving paraphrases are developed using 
+heuristics
+<P>
+<P>23 had you touched any pyramid before you put the green one on the little 
+cube?
+<P>YES THE GREEN ONE
+<P>the system needs to find the correct event which involves the tenses of verb 
+groups
+<P>24 when did you pick it up?
+<P>WHILE I WAS STACKING UP THE RED CUBE A LARGE RED BLOCK AND A LARGE GREEN CUBE
+<P>the time consists of the goal
+<P>25 why?
+<P>TO GET RID OF IT
+<P>26 why did you do that?
+<P>TO CLEAN OFF THE RED CUBE
+<P>the answer involves considering the subgoals in the tree
+<P>27 why did you clear off that cube?
+<P>TO PUT IT ON A LARGE GREEN CUBE
+<P>28 why did you do that?
+<P>TO STACK UP THE RED CUBE A LARGE RED BLOCK AND A LARGE GREEN CUBE
+<P>29 why did you do that?
+<P>BECAUSE YOU ASKED ME TO DO IT
+<P>it cannot remember the command
+<P>30 how did you do it?
+<P>BY PUTTING A LARGE RED BLOCK ON THE TABLE THEN LETTING GO OF IT THEN PUTTING 
+A LARGE GREEN CUBE ON IT THEN LETTING GO OF THAT CUBE THEN PUTTING THE RED CUBE 
+ON THAT CUBE THEN LETTING GO OF THAT CUBE
+<P>this is a complete printout of all the subgoals achieved
+<P>31 how many objects did you touch while you were doing it?
+<P>FOUR OF THEM
+<P>32 what did the red cube support before you started to clean it off?
+<P>THE GREEN PYRAMID
+<P>it uses its memory of past events
+<P>33 there were five blocks to the left of the box then
+<P>NO ONLY FOUR OF THEM THE RED CUBE TWO LARGE GREEN CUBES AND A LARGE RED BLOCK
+<P>34 put the blue pyramid on the block in the box
+<P>OK
+<P>there is an ambiguity here but as there is no pyramid on a block in the box 
+it understands that it has to move the pyramid on the block into the box
+<P>35 is there anything which is bigger than every pyramid but is not as wide as 
+the thing that supports it
+<P>YES THE BLUE BLOCK
+<P>36 does a steeple
+<P>SORRY I DON'T KNOW THE WORD STEEPLE
+<P>37 a "steeple" is a stack which contains two green cubes and a pyramid
+<P>I UNDERSTAND
+<P>38 are there any steeples now?
+<P>NO
+<P>39 build one
+<P>OK
+<P>the process begins by clearing one of the green cubes removal of a red cube 
+then the two green cubes and a red pyramid are stacked
+<P>40 call the biggest block superblock
+<P>OK
+<P>41 have you picked up superblock since we begun
+<P>YES
+<P>42 why did you drop it?
+<P>BY "IT" I ASSUME THAT YOU MEAN THE SUPERBLOCK
+<P>I CAN'T EXPLAIN A NONEXISTENT EVENT
+<P>there is no record of this
+<P>43 is there anything to the right of the red pyramid?
+<P>YES FOUR THINGS THE BOX THE RED CUBE THE BLUE PYRAMID AND THE BLOCK NAMED 
+SUPERBLOCK<B>
+<P>44 END OF SESSION</B>
+<P>SYNTAX
+<P>
+<P>SYNTAX and MEANING
+<P>
+<P>The decision to consider syntax as a proper study devoid of semantics is a 
+basic tenet of many recent linguistic theories. Language is viewed as a way of 
+organising strings of abstract symbols and competence is explained in terms of 
+symbol manipulating rules. Although these methods have been remarkably 
+successful in one sense they have almost completely lost the semantics. The 
+problem is not that current theories are finding wrong answers to the questions 
+they ask it is that they are asking the wrong questions. What is needed is an 
+approach which can deal meaningfully with the question 
+<P>
+<P>"how is language organised to convey meaning?" rather than 
+<P>"how are syntactic structures viewed in isolation?"
+<P>
+<P>Syntax helps the speaker convey meaning beyond the meaning of words. The 
+sentence is a series of syntactic structures chosen by the speaker to encode 
+meaning. The listener must detect these structures to interpret the meaning of 
+the sentence. The system is based upon Halliday's grammar which places greater 
+emphasis on the way language is structured. It deals with word groupings rather 
+than deep structures. Systemic grammar pays more attention to the way language 
+is organised into units each of which has a special role in cinveying meaning
+<P>. 
+<P>In English we can distinguish three basic <B>ranks</B> of units 
+<P>the CLAUSE, 
+<P>the GROUP and 
+<P>the WORD. 
+<P>
+<P>There are several types of GROUP
+<P>NOUN GROUPS NG
+<P>VERB GROUPS VG
+<P>PREPOSITION GROUPS PREPG
+<P>ADJECTIVE GROUPS ADJG
+<P>
+<P>Consider the analysis of the sentence 
+<P>the three big red dogs ate a raw juicy steak
+<P>which is parsed using systemic grammar as shown on the next page.
+<P>The WORD is the basic building block and any particular word has features so 
+dogs is seen as plural, the word ate is eat in a different tense. <A 
+href="http://www.cm.cf.ac.uk/Dave/AI1/ailect15shrdlu2.gif">Click here for 
+Picture </A>
+<P>
+<P>
+<P>
+<P>The next unit above a WORD is a GROUP and there are four types. Each group 
+has a particular function in conveying meaning NG describe objects VG can convey 
+messages about time. Each group can have variable numbers of slots for the 
+words. NG allows number determiners adjectives and nouns. Each group exhibits 
+features such as definite -the- plural modal -could have been seen-. The CLAUSE 
+can be a QUESTION or a DECLARATIVE or an IMPERATIVE. It can be active or 
+passive.
+<P>
+<P>The above parse tree has a three level structure where the CLAUSE is split up 
+into three GROUPS and each of the GROUPS is split into individual WORDS. As not 
+all sentences have this structure we encounter the concept of a rankshift where 
+a group can occur at a different level , for example , the man <B>who came to 
+dinner</B> , or ,by <B>leaving the coutntry</B>. The rankshift is one of the 
+principles of the systemic grammar. 
+<P>
+<P>The next question to tackle is why does the rankshift provide an advantage 
+over the deep structure and the answer lies in the features that each unit can 
+have. We can sat that all sentences can be a QUESTION or a DECLARATIVE or an 
+IMPERATIVE and that if they are questions then they can be subdivided into 
+YES_NO or WH types. This last choice is meaningless if the sentence is not a 
+question but if it is then the distinction must be made. If the CLAUSE is a 
+sentence or a MAJOR clause then it must be partitioned into one of the 
+permissable types but this distinction is not appropriate for a secondary clause 
+SEC. We can depict these structures as follows on the next page. <A 
+href="http://www.cm.cf.ac.uk/Dave/AI1/ailect15shrdlu3.gif">Click here for 
+Picture </A>
+<P>
+<P>
+<P>The work of relating the set of features of an actual sentence to the surface 
+structure is done in systemic grammar by realisation rules. If we consider 
+sentences in different forms
+<P>Sally saw the squirrel
+<P>did Sally see the squirrel?
+<P>the squirrel was seen by Sally
+<P>In transformational grammars these forms would be equivalent but the word 
+orders would be achieved by means of transformations. In systemic grammar the 
+features would be noted and these would have a good overlap except for <B>active 
+| passive declarative | question</B>. The realisation rules would then signal 
+the exact word order.
+<P>
+<P>PARSING
+<P>The parsing for this program is achieved by using the language PROGRAMMAR and 
+an interpreter. It is basically a top-down left-to right parser but it can 
+modify this technique if it sees fit. Chomsky said that the grammar should 
+associate a structural description to each permissable sentance in the language 
+and this parsing program does that. We can set up special tools to handle 
+complexities such as 'and, or' and these cause interrupts in the parsing 
+process. Interrupts are also caused by idioms. The parsing process can be 
+interrupted at any time and semantivc considerations can be introduced. When we 
+see the sentence<I>
+<P>he gave the boy plants to water.</I>
+<P>we do not confuse it with<I>
+<P>he gave the house plants to charity.</I>
+<P>The phrase boy plants is not meaningful like boy scouts so we reject any 
+structure based upon this concept. This ability to integrate semantics with 
+syntax is particularly important.
+<P>
+<P>
+<P>
+<P>AMBIGUITY
+<P>The program tries to find a possible parsing for a sentence and as soon as ot 
+finds an answer it returns it this is what it is designed to do. The process is 
+unified with the results of the semantic interpretation being used to guide the 
+parsing. If in parsing a noun group a call to the semantic interpreter fails to 
+make sense of the noun group the parsing is immediately redirected.
+<P>
+<P>The way to treat ambiguity is not to list all possible solutions to the 
+parsing problem by finding all possible interpretations of the sentance but in 
+being clever in choosing the first possible parsing. The parser will consider a 
+failure if one occurs analyse the reasons for its occurrence and then take 
+appropriate action. Suppose we have the sentance
+<P>I rode down the street in a car
+<P>the parser may wish to consider the noun group 
+<P>the street in a car
+<P>the semantic analyser will reject the phrase
+<P>in a car 
+<P>as a qualifier of a street.
+<P>
+<P>Since the semantic programs are part of a general deductive system with a 
+definite worl model the semantic evaluation which guides parsing can include 
+both general knowledge and specific knowledge. Few sentences seem ambiguous to 
+humans when first read. They are guided by an understanding of what is said to 
+pick a single parsing and a few very different meanings. By using this same 
+knowledge to guide its parsing a computer understanding system can take 
+advantage of the same technique to parse meaningful sentences quickly and 
+efficiently.
+<P>
+<P>A semantic theory must account for multiple meanings of wordsphrase and 
+sentences. Words may have several senses producing multiple possible 
+interpretations of phrases and sentences involving them. Sometimes a sentence 
+may also be described with several different syntactic structures leading to 
+ambiguities. The sentance
+<P>the woman sitting in the room saw the flash of lightning
+<P>will be ambiguous if each word has a specific meaning. It could mean
+<P>the woman who was sitting in the room 
+<P>the woman who is sitting in the room
+<P>
+<P>In parsing we do not carry forward two possible structures we try to find the 
+best and only seek others if we run into trouble. In semantics we take the other 
+approach and if a word has two possible meanings we proceed in parallel.
+<P>
+<P>There is a danger here of combinatorial explosion. If each word in a group of 
+four has three meanings there could be 81 alternatives.
+<P>Consider the phrase
+<P>the green ball
+<P>we know that green can mean the colour unripe or a rooky
+<P>ball can be a sherical object or a grand dance
+<P>but it would be naive to associate the meanings
+<P>a rooky dance
+<P>or an unripe dance
+<P>so we are left with a coloured spherical object.
+<P>
+<P>PROCEDURAL DEDUCTIVE SYTEMS
+<P>
+<P>The system requies programming techniques capable of using procedural 
+information but at the same time expressing this information in ways which do 
+not depend on the idiosyncracies of particular languages. PLANNER is a 
+goal-oriented procedural language designed to specify the bill. It handles 
+simple assertions efficiently and it can handle complex information expressable 
+in predicate calculus. Complex information is expressed in procedural form and 
+this can include ideas of how to go about a proof. Being goal-oriented it is not 
+concerned about interaction between procedures. The language is concerned with 
+achieving goals not in how they are achieved and any valid accelerator can be 
+introduced. New theorems can be easily added. PLANNER is a uniform notation for 
+expressing procedural knowledge just as predicate calculus is a notation for 
+describing a limited range of information.
+<P>
+<P>COMPARISON WITH OTHER PARSERS
+<P>
+<P>The early machine-translator dseigners were forced to develop their own 
+linguistics as they worked and they produced rough versions. The parsers were 
+packages of routines that evolved as the grammars emerged and grew to handle 
+more complex sentances. When the machine-translation failed it seemed clear that 
+it had been premature to tackle the natural language problem without sufficient 
+linguistic development. Computer programs for natural language took separate 
+paths: 
+<P>the first was to ignore syntax completely and to use a general pattern 
+matching process to derive information for example SIR STUDENT and ELIZA. They 
+limited the user to a small set of inputs or their understanding to things that 
+ignored syntax.
+<P>the second was to take a simplified subset of English which could be handled 
+by a well understood form of grammar. Bobrow has produced a summary of this 
+work.
+<P>
+<P>AUGMENTED TRANSITION NETWORKS
+<P>
+<P>ATN's have the power of Turing machines since they have changeable registers 
+and can transfer control depending on the state of these registers. They can 
+handle any type of gramar that can be parsed by any machine. ATN's appear to 
+operate more closely with the way humans work thus they give a natural and 
+understandable representation for grammars.
+<P>
+<P>GRAMMAR
+<P>As we have seen it uses the concepts of CLAUSE GROOUP and WORD
+<P>the structure of a CLAUSE is quite complex and a simplified form has been 
+shown.
+<P>NOUN GROUP
+<P>The noun group consists of the components
+<P>determiner the
+<P>ordinals first
+<P>numbers six
+<P>adjectives intelligent
+<P>classifier wales
+<P>noun england
+<P>qualifier prepositional group ---in the moon
+<P>
+<P>VERB GROUPS
+<P>
+<P>ACTIVE
+<P>
+<P>took--past
+<P>takes--present
+<P>will take--future
+<P>can take--modal
+<P>has taken--past in present
+<P>was taking--present in past
+<P>was goint to have taken--past in future in past
+<P>was going to have been taking--present in past in future in past
+<P>
+<P>
+<P>PASSIVE
+<P>
+<P>is taken--present
+<P>could have been taken--past in modal
+<P>has been going to have been taken--past in future in past in present
+<P>
+<P>
+<P>Words have features
+<P>There is a sophisticated algorithm to analyse word endings
+<P>The grammar appears in LISP
+<P>for example
+<P>
+<P>
+<P>
+<P>
+<P>1 S -&gt;NP VP
+<P>2 NP -&gt;DETERMINER NOUN
+<P>3 VP -&gt;VERB/INTRANSITIVE
+<P>4 VP -&gt;VERB/TRANSITIVE
+<P>5 DETERMINER -&gt;the
+<P>6 NOUN -&gt;giraffe
+<P>7 NOUN -&gt;apple
+<P>8 VERB/INTRANSITIVE -&gt;dreams
+<P>9 VERB/TRANSITIVE -&gt;eats
+<P>
+<P>
+<P>(DEFUN SENTENCE
+<P>(((PARSE NP) NIL FAIL)
+<P>((PARSE VP) FAIL FAIL RETURN)))
+<P>(DEFUN NP
+<P>(((PARSE DETERMINER ) NIL FAIL)
+<P>((PARSE NOUN ) RETURN FAIL))
+<P>(DEFUN VP
+<P>((PARSE VERB ) NIL FAIL)
+<P>(ISQ H TRANSITIVE) NIL INTRANS)
+<P>((PARSE NP) RETURN NIL)
+<P>INTRANS
+<P>((ISQ H INTRANSITIVE ) RETURN FAIL)))
+<P>(DEFPROP GIRAFFE (NOUN) WORD)
+<P>(DEFPROP DREAM (VERB INTRANSITIVE) WORD)
+<P>
+<P>SEMANTICS
+<P>We need a transducer that can work with a syntax analyser and produce data 
+which is acceptable to a logical deductive system. The semantic theory must 
+describe relationships at three different levels.
+<P>It must define the meaning of words which involves its relationship to a 
+vocabulary and a structure of concepts. The next level relates the emaning of 
+groups of words in syntactic structures. We need an analysis of the ways in 
+which English structures convey meaning and the roles that words play. Finally 
+an English sentance is not viewed in isolation. A semantic theory must describe 
+how the meaning of a sentance depends on its context.<B>FUNNY SENTENCES WITH 
+AMBIGUITY
+<P></B><I>
+<P>I rode down the street in a car.
+<P>I carried regularly goldfish in a bowl.
+<P>The councillors refused the demonstrators a permit because they feared 
+violence.
+<P>The councillors refused the demonstrators a permit because they advocated 
+revolution.
+<P>He hit the car with a large rock.
+<P>He hit the car with a missing bumper.
+<P>The woman played the piano with a wooden leg.
+<P>Fruit flies like a banana
+<P></I><B>
+<P>WOODS</B>
+<P>The ATN through its use of flags allows for the merging of similar parts of 
+the network by recording information in registers and interrogating it ... and 
+to merge states whose transitions are similar except for conditions an the 
+contents of the registers;
+<P>
+<P>the networks capture the regularities of the language ... whenever ther are 
+two essentially identical parts of the grammar which differ only in that the 
+finite control part of the machine is remembering some piece of information ... 
+it is sufficient to explicitly store the distinguishing piece of information in 
+a register and use only a single copy of the subgraph .
+<P>
+<P>The use of subroutines with an argument and a parameter.
+<P><A href="http://www.cm.cf.ac.uk/Dave/AI1/ailect15shrdlu4.gif">Click here for 
+Picture </A>
+<P></P></BODY></HTML>
